@@ -21,15 +21,18 @@ const io       = socketIo(server);
 
 io.on('connection', function (socket) {
   var totalClients = io.engine.clientsCount;
+  var welcomeMsg   = 'Welcome to Ask the Audience!'
   console.log('A user has connected.', totalClients);
 
   io.sockets.emit('usersConnected', totalClients);
-  socket.emit('statusMessage', 'You have connected.');
+  socket.emit('statusMessage', welcomeMsg);
 
   socket.on('message', function (channel, message) {
     if (channel === 'voteCast') {
       votes[socket.id] = message;
       socket.emit('voteCount', countVotes(votes));
+      io.sockets.emit('voteCount', countVotes(votes));
+      socket.emit('yourVote', message)
     }
   });
 
