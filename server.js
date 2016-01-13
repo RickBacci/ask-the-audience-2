@@ -24,23 +24,35 @@ io.on('connection', function (socket) {
   console.log('A user has connected.', totalClients);
 
   io.sockets.emit('usersConnected', totalClients);
-
   socket.emit('statusMessage', 'You have connected.');
-
-  socket.on('disconnect', function () {
-  console.log('A user has disconnected.', totalClients);
-  delete votes[socket.id];
-  console.log(votes);
-  io.sockets.emit('usersConnected', totalClients);
-  });
 
   socket.on('message', function (channel, message) {
     if (channel === 'voteCast') {
       votes[socket.id] = message;
-      console.log(votes);
+      socket.emit('voteCount', countVotes(votes));
     }
   });
 
+  socket.on('disconnect', function () {
+    console.log('A user has disconnected.', totalClients);
+    delete votes[socket.id];
+    socket.emit('voteCount', countVotes(votes));
+    io.sockets.emit('usersConnected', totalClients);
+  });
+
+
+  function countVotes(votes) {
+    var voteCount = {
+      A: 0,
+      B: 0,
+      C: 0,
+      D: 0
+    };
+    for (vote in votes) {
+      voteCount[votes[vote]]++
+    }
+    return voteCount;
+  }
 });
 
 module.exports = server;
