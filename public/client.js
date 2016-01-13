@@ -31,4 +31,9 @@ socket.on('voteCount', function(votes) {
   totalC.innerText = "C: " + votes['C'];
   totalD.innerText = "D: " + votes['D'];
 });
+
+var yourVote = document.getElementById('your-vote');
+
+socket.on('yourVote', function(message) {
+  yourVote.innerText = "You cast your vote for: " + message;
 });
