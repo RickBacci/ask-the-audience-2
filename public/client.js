@@ -20,6 +20,15 @@ for (var i = 0; i < buttons.length; i++) {
   });
 }
 
+var totalA = document.getElementById('totalA') || 0;
+var totalB = document.getElementById('totalB') || 0;
+var totalC = document.getElementById('totalC') || 0;
+var totalD = document.getElementById('totalD') || 0;
+
 socket.on('voteCount', function(votes) {
-  console.log(votes);
+  totalA.innerText = "A: " + votes['A'];
+  totalB.innerText = "B: " + votes['B'];
+  totalC.innerText = "C: " + votes['C'];
+  totalD.innerText = "D: " + votes['D'];
+});
 });
